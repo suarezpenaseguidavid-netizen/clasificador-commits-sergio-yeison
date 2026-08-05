@@ -6,7 +6,7 @@ import time
 import psycopg2
 import requests
 from dotenv  import load_dotenv
-from fastapi import FastAPI, HTTPExeption
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 load_dotenv()
