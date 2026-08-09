@@ -16,7 +16,9 @@ def test_clasificar_eco():
         json={"texto": "fix: corrige error en login", "motor": "eco"},
     )
     assert r.status_code == 200
-    assert r.json()["tipo"] == "fix"
+    cuerpo = r.json()
+    assert cuerpo["tipo"] == "fix"
+    assert cuerpo["latencia_ms"] >= 0
 
 
 def test_motor_invalido():
@@ -28,6 +30,8 @@ def test_motor_invalido():
 
 
 def test_reglas_eco():
+    assert clasificar_eco("agrega el endpoint de salud") == "feat"
+    assert clasificar_eco("actualiza el readme") == "docs"
     assert clasificar_eco("agrega pruebas unitarias") == "test"
 
 
