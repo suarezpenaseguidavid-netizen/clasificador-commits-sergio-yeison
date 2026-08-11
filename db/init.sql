@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS inferencias (
 
 CREATE ROLE app_ia WITH LOGIN PASSWORD 'claveApp456';
 
-GRANT CONNECT ON DATABASE iadb TO app_ia;
+GRANT CONNECT ON DATABASE clasificador TO app_ia;
 GRANT USAGE ON SCHEMA public TO app_ia;
 GRANT SELECT, INSERT ON inferencias TO app_ia;
 GRANT USAGE, SELECT ON SEQUENCE inferencias_id_seq TO app_ia;
