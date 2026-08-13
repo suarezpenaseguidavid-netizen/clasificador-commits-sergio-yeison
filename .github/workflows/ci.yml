@@ -75,4 +75,4 @@ jobs:
         env:
           PGPASSWORD: claveCI
 
-      - run: pytest -v
+      - run: PYTHONPATH=. pytest -v
