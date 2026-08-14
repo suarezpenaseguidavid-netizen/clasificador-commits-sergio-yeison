@@ -59,3 +59,58 @@ Si una contraseña se filtra se deben realizar las siguientes acciones:
 3. Reiniciar los servicios afectados.
 4. Revisar los registros para detectar accesos no autorizados.
 5. Revocar las credenciales antiguas y generar nuevas.
+
+---
+
+## Respaldo y restauración de la base de datos
+
+### Crear un respaldo
+
+```bash
+mkdir -p backups
+docker exec db-ia pg_dump -U postgres clasificador > backups/backup_clasificador.sql
+```
+
+Verificar que el archivo fue creado:
+
+```bash
+ls -lh backups
+```
+
+### Simular un desastre
+
+Consultar la cantidad de registros:
+
+```bash
+docker compose exec -T db psql -U postgres -d clasificador -c "SELECT COUNT(*) FROM inferencias;"
+```
+
+Eliminar temporalmente los datos:
+
+```bash
+docker compose exec -T db psql -U postgres -d clasificador -c "TRUNCATE inferencias;"
+```
+
+Verificar que la tabla quedó vacía:
+
+```bash
+docker compose exec -T db psql -U postgres -d clasificador -c "SELECT COUNT(*) FROM inferencias;"
+```
+
+### Restaurar el respaldo
+
+```bash
+cat backups/backup_clasificador.sql | docker compose exec -T db psql -U postgres -d clasificador
+```
+
+Verificar que los datos fueron recuperados:
+
+```bash
+docker compose exec -T db psql -U postgres -d clasificador -c "SELECT COUNT(*) FROM inferencias;"
+```
+
+Resultado esperado:
+
+- Antes del desastre: **12 registros**.
+- Después de `TRUNCATE`: **0 registros**.
+- Después de la restauración: **12 registros**.
